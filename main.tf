@@ -60,10 +60,8 @@ resource "google_compute_instance" "sympl-server" {
   provisioner "remote-exec" {
     inline = [
 	  "sudo apt install wget",
-      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
+    "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
 	  "sudo bash install.sh --noninteractive",
-      "sudo chown -R sympl:sympl /srv",
-      "sudo chown -R sympl:sympl /etc/sympl", 
     ]
   }
 
