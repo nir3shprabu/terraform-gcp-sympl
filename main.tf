@@ -64,10 +64,7 @@ resource "google_compute_instance" "sympl-server" {
       timeout     = "500s"
       private_key = file(var.private_keypath)
     }
-    
-# It's still work in progress
-# After sympl installation the post installation steps are not executing
-    
+
     inline = [
       "sudo echo -e 'sympl\nsympl' | sudo passwd sympl",
       "sudo chown -R sympl:sympl /etc/sympl/",
