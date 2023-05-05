@@ -50,7 +50,10 @@ resource "google_compute_instance" "sympl-server" {
       timeout     = "500s"
       private_key = file(var.private_keypath)
     }
-
+    
+# It's still work in progress
+# After sympl installation the post installation steps are not executing
+    
     inline = [
       "sudo apt install wget",
       "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
