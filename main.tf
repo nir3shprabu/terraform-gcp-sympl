@@ -4,16 +4,16 @@ resource "google_compute_firewall" "firewall" {
   network = "default"
 
   allow {
-    protocol = "icmp"
-  }
-
-  allow {
     protocol = "tcp"
     ports    = ["22", "80", "443"]
   }
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["sympl-server"]
+}
+
+data "template_file" "default" {
+  template = file("./templates/startup.sh")
 }
 
 resource "google_compute_address" "static" {
@@ -24,16 +24,14 @@ resource "google_compute_address" "static" {
 }
 
 resource "google_compute_instance" "sympl-server" {
-  name         = "sympl-server"
-  zone         = "${var.region}-b"
-  machine_type = var.machine_type
-  tags         = ["sympl-server"]
+  name                    = "sympl-server"
+  zone                    = "${var.region}-b"
+  machine_type            = var.machine_type
+  tags                    = ["sympl-server"]
 
   boot_disk {
     initialize_params {
-        image = "debian-cloud/debian-11"
-
-
+      image = "debian-cloud/debian-11"
     }
   }
 
@@ -47,22 +45,26 @@ resource "google_compute_instance" "sympl-server" {
   labels = {
     name = "sympl-server"
   }
-
-  connection {
-    type        = "ssh"
-    user        = var.user
-    timeout     = "2m"
-    private_key = file(var.private_keypath)
-    agent       = false
-    host        = google_compute_address.static.address
-  }
-
+  
   provisioner "remote-exec" {
+    connection {
+      host        = google_compute_address.static.address
+      type        = "ssh"
+      user        = "ubuntu"
+      timeout     = "500s"
+      private_key = file(var.private_keypath)
+    }
+
     inline = [
-	  "sudo apt install wget",
-    "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
-	  "sudo bash install.sh --noninteractive",
+      "sudo apt install wget",
+      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
+      "sudo bash install.sh --noninteractive",
+      "sudo echo -e 'sympl\nsympl' | sudo passwd sympl",
+      "sudo chown -R sympl:sympl /etc/sympl/",
+      "sudo chown -R sympl:sympl /srv/",
+      "sudo chown -R sympl:sympl /etc/mysql/",
     ]
+    
   }
 
   depends_on = [google_compute_firewall.firewall]
