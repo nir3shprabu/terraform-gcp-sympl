@@ -1,15 +1,15 @@
 ### Todo
 
-- [ ] Change sympl user password - passwd sympl
-- [ ] change permissions for /srv /etc/mysql
+- [ ] The password for user sympl should be changed after installation
+- [ ] The user group permissions needed to be configured for /srv and /etc/mysql directory
 
 ### In Progress  
 
-- [X] Change sympl user password - passwd sympl
-- [x] change permissions for /srv /etc/mysql
+- [X] The password for user sympl should be changed after installation
+- [x] The user group permissions needed to be configured for /srv and /etc/mysql directory
 
 
 ### Done ✓  
 
-- [ ] Change sympl user password - passwd sympl
-- [ ] change permissions for /srv /etc/mysql
+- [ ] The password for user sympl should be changed after installation
+- [ ] The user group permissions needed to be configured for /srv and /etc/mysql directory
