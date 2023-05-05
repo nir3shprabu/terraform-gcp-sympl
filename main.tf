@@ -20,10 +20,10 @@ resource "google_compute_address" "static" {
 }
 
 resource "google_compute_instance" "sympl-server" {
-  name                    = "sympl-server"
-  zone                    = "${var.region}-b"
-  machine_type            = var.machine_type
-  tags                    = ["sympl-server"]
+  name         = "sympl-server"
+  zone         = "${var.region}-b"
+  machine_type = var.machine_type
+  tags         = ["sympl-server"]
 
   boot_disk {
     initialize_params {
@@ -41,7 +41,21 @@ resource "google_compute_instance" "sympl-server" {
   labels = {
     name = "sympl-server"
   }
-  
+  connection {
+    host        = google_compute_address.static.address
+    type        = "ssh"
+    user        = "ubuntu"
+    timeout     = "500s"
+    private_key = file(var.private_keypath)
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt install wget",
+      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
+      "sudo bash install.sh --noninteractive"
+    ]
+  }
+
   provisioner "remote-exec" {
     connection {
       host        = google_compute_address.static.address
@@ -52,15 +66,12 @@ resource "google_compute_instance" "sympl-server" {
     }
 
     inline = [
-      "sudo apt install wget",
-      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
-      "sudo bash install.sh --noninteractive",
       "sudo echo -e 'sympl\nsympl' | sudo passwd sympl",
       "sudo chown -R sympl:sympl /etc/sympl/",
       "sudo chown -R sympl:sympl /srv/",
       "sudo chown -R sympl:sympl /etc/mysql/",
     ]
-    
+
   }
 
   depends_on = [google_compute_firewall.firewall]
