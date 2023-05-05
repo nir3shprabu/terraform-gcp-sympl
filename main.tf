@@ -12,10 +12,6 @@ resource "google_compute_firewall" "firewall" {
   target_tags   = ["sympl-server"]
 }
 
-data "template_file" "default" {
-  template = file("./templates/startup.sh")
-}
-
 resource "google_compute_address" "static" {
   name       = "vm-public-address"
   project    = var.project_id
