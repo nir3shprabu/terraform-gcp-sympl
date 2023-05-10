@@ -1,3 +1,8 @@
+resource "random_password" "sympl" {
+  length  = 5
+  special = false
+}
+
 resource "google_compute_firewall" "firewall" {
   name    = "default-allow-http-fw"
   project = var.project_id
@@ -56,27 +61,28 @@ resource "google_compute_instance" "sympl-server" {
     ]
   }
 
-  provisioner "remote-exec" {
-    connection {
-      host        = google_compute_address.static.address
-      type        = "ssh"
-      user        = "ubuntu"
-      timeout     = "500s"
-      private_key = file(var.private_keypath)
-    }
-
-    inline = [
-      "sudo echo -e 'sympl\nsympl' | sudo passwd sympl",
-      "sudo chown -R sympl:sympl /etc/sympl/",
-      "sudo chown -R sympl:sympl /srv/",
-      "sudo chown -R sympl:sympl /etc/mysql/",
-    ]
-
-  }
-
   depends_on = [google_compute_firewall.firewall]
 
   metadata = {
     ssh-keys = "ubuntu:${file(var.public_keypath)}"
+  }
+}
+
+resource "null_resource" "sympl_config" {
+  connection {
+    host        = google_compute_address.static.address
+    type        = "ssh"
+    user        = "ubuntu"
+    timeout     = "500s"
+    private_key = file(var.private_keypath)
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 1m",
+      "sudo echo -e ${random_password.sympl.result} > /tmp/symplpass",
+      "sudo echo -e '${random_password.sympl.result}\n${random_password.sympl.result}' | sudo passwd sympl",
+      "sudo chown -R sympl:sympl /etc/mysql/",
+    ]
   }
 }
