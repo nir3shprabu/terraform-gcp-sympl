@@ -80,7 +80,6 @@ resource "null_resource" "sympl_config" {
   provisioner "remote-exec" {
     inline = [
       "sleep 1m",
-      "sudo echo -e ${random_password.sympl.result} > /tmp/symplpass",
       "sudo echo -e '${random_password.sympl.result}\n${random_password.sympl.result}' | sudo passwd sympl",
       "sudo chown -R sympl:sympl /etc/mysql/",
     ]
