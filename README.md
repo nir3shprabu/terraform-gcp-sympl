@@ -1,6 +1,6 @@
 # terraform-gcp-sympl
 
-This repo contains a WIP Terraform plan for deploying sympl on GCP
+This repo contains a Terraform plan for deploying sympl on GCP
 
 ## Sympl
 Sympl is designed to be easy to use and low maintenance, it is an open-source which is a series of scripts and templates which allow you to automatically and efficiently configure your website and email on a virtual or dedicated Linux server hosting running Debian Stretch or newer.
