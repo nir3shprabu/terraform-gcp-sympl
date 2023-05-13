@@ -46,20 +46,6 @@ resource "google_compute_instance" "sympl-server" {
   labels = {
     name = "sympl-server"
   }
-  connection {
-    host        = google_compute_address.static.address
-    type        = "ssh"
-    user        = "ubuntu"
-    timeout     = "500s"
-    private_key = file(var.private_keypath)
-  }
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt install wget",
-      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
-      "sudo bash install.sh --noninteractive"
-    ]
-  }
 
   depends_on = [google_compute_firewall.firewall]
 
@@ -69,12 +55,12 @@ resource "google_compute_instance" "sympl-server" {
 }
 
 resource "null_resource" "sympl_config" {
-  connection {
-    host        = google_compute_address.static.address
-    type        = "ssh"
-    user        = "ubuntu"
-    timeout     = "500s"
-    private_key = file(var.private_keypath)
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt install wget",
+      "wget https://gitlab.com/sympl.io/install/-/raw/master/install.sh",
+      "sudo bash install.sh --noninteractive"
+    ]
   }
 
   provisioner "remote-exec" {
@@ -83,5 +69,12 @@ resource "null_resource" "sympl_config" {
       "sudo echo -e '${random_password.sympl.result}\n${random_password.sympl.result}' | sudo passwd sympl",
       "sudo chown -R sympl:sympl /etc/mysql/",
     ]
+  }
+  connection {
+    host        = google_compute_address.static.address
+    type        = "ssh"
+    user        = "ubuntu"
+    timeout     = "500s"
+    private_key = file(var.private_keypath)
   }
 }
