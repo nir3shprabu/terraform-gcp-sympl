@@ -29,6 +29,7 @@ gcloud auth application-default login
 |Name | Version |
 | --- | ------- |
 | gcp | >=4.47.0 |
+| null | >=3.2.1 |
 
 ## Terraform Resources
 
@@ -37,6 +38,7 @@ gcloud auth application-default login
 | `google_compute_firewall` | Resource |
 | `google_compute_address` | Resource |
 | `google_compute_instance` | Resource |
+| `null_resource` | Resource |
 
 ## Inputs
 
@@ -45,6 +47,36 @@ gcloud auth application-default login
 | `project_id` |  string | yes
 | `machine_type` | string | yes |
 | `region` | string | yes |
-| `user` |  string | yes
 | `public_keypath` |  string | yes |
 | `private_keypath` | string | yes |
+
+# Usage
+`make` automates the process of manually running the terraform command chains
+
+## Configure terraform variables
+
+You may run below command to template out a `terraform.tfvars` file.
+
+```
+make setup-gcp
+```
+
+## Deploy relayer instance
+
+Once your variables are in place, the terraform plan is set and ready to be applied
+
+```
+make create-gcp
+```
+
+## Destroy relayer instance
+
+```
+make destroy-gcp
+```
+
+## Output
+
+| Name | Description |
+| ---- | ----------- |
+| sympl_password | The password of the user `sympl`. |
