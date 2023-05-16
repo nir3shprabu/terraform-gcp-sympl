@@ -59,6 +59,21 @@ resource "google_compute_firewall" "firewall" {
   target_tags   = ["http-server", "https-server"]
 }
 
+resource "google_compute_disk" "my_disk" {
+  name = "my-disk"
+  size = 100 # Disk size in GB
+  type = "pd-standard"
+  zone = "<zone>"
+
+  # Add other disk configuration as needed
+}
+
+resource "google_compute_instance_attach_disk" "my_instance_disk" {
+  instance = google_compute_instance.sympl-server.name
+  disk     = google_compute_disk.my_disk.name
+}
+
+
 resource "null_resource" "sympl_config" {
   provisioner "remote-exec" {
     inline = [
