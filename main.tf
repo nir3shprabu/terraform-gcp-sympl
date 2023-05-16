@@ -3,20 +3,6 @@ resource "random_password" "sympl" {
   special = false
 }
 
-resource "google_compute_firewall" "firewall" {
-  name    = "default-allow-http-fw"
-  project = var.project_id
-  network = "default"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22", "80", "443"]
-  }
-
-  source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["sympl-server"]
-}
-
 resource "google_compute_address" "static" {
   name       = "vm-public-address"
   project    = var.project_id
@@ -28,7 +14,7 @@ resource "google_compute_instance" "sympl-server" {
   name         = "sympl-server"
   zone         = "${var.region}-b"
   machine_type = var.machine_type
-  tags         = ["sympl-server"]
+  tags         = ["http-server", "https-server"]
 
   boot_disk {
     initialize_params {
@@ -52,6 +38,25 @@ resource "google_compute_instance" "sympl-server" {
   metadata = {
     ssh-keys = "ubuntu:${file(var.public_keypath)}"
   }
+}
+
+resource "google_compute_firewall" "firewall" {
+  name    = "default-allow-http-fw"
+  project = var.project_id
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["http-server", "https-server"]
 }
 
 resource "null_resource" "sympl_config" {
