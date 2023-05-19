@@ -61,7 +61,7 @@ You may run below command to template out a `terraform.tfvars` file.
 make setup-gcp
 ```
 
-## Deploy relayer instance
+## Deploy sympl instance
 
 Once your variables are in place, the terraform plan is set and ready to be applied
 
@@ -69,7 +69,7 @@ Once your variables are in place, the terraform plan is set and ready to be appl
 make create-gcp
 ```
 
-## Destroy relayer instance
+## Destroy sympl instance
 
 ```
 make destroy-gcp
