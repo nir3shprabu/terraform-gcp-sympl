@@ -80,3 +80,17 @@ make destroy-gcp
 | Name | Description |
 | ---- | ----------- |
 | sympl_password | The password of the user `sympl`. |
+
+
+## infracost
+
+ Name                                                 Monthly Qty  Unit   Monthly Cost 
+                                                                                       
+ google_compute_address.static                                                         
+ └─ IP address (standard VM)                                  730  hours         $2.92 
+                                                                                       
+ google_compute_instance.sympl-server                                                  
+ ├─ Instance usage (Linux/UNIX, on-demand, e2-small)          730  hours        $12.23 
+ └─ Standard provisioned storage (pd-standard)                 10  GB            $0.40 
+                                                                                       
+ OVERALL TOTAL                                                                  $15.55 
