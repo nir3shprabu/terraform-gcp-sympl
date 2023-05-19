@@ -83,7 +83,7 @@ make destroy-gcp
 
 
 ## infracost
-
+```bash
  Name                                                 Monthly Qty  Unit   Monthly Cost 
                                                                                        
  google_compute_address.static                                                         
