@@ -1,0 +1,27 @@
+name: Validate Terraform
+on:
+  push 
+jobs:
+  terraform-validate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Validate Terraform configuration
+      uses: devops-infra/action-terraform-validate@v0.3
+
+  terraform-lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Check linting of Terraform files
+      uses: devops-infra/action-tflint@v0.3
+
+  format-hcl:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Fail on malformatted files
+      uses: devops-infra/action-format-hcl@v0.3.6
